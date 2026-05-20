@@ -1,0 +1,73 @@
+name: .NET Core Desktop
+
+on:
+  push:
+    branches: [ "main" ]
+    tags:
+      - 'v*.*'  # Trigger release workflow on tags like v1.0, v2.1
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        configuration: [Release]
+
+    runs-on: windows-latest
+
+    env:
+      Solution_Name: ChiaMail.slnx
+      Test_Project_Path: tests/ChiaMail.Tests/ChiaMail.Tests.csproj
+      Wap_Project_Directory: src/ChiaMail
+      Wap_Project_Path: src/ChiaMail/ChiaMail.csproj
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 10.0.x
+
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Execute unit tests
+      run: dotnet test ${{ env.Test_Project_Path }} --configuration ${{ matrix.configuration }}
+
+    - name: Decode the pfx
+      if: startsWith(github.ref, 'refs/tags/')
+      run: |
+        $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.Base64_Encoded_Pfx }}")
+        $certificatePath = Join-Path -Path $env:Wap_Project_Directory -ChildPath GitHubActionsWorkflow.pfx
+        [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
+
+    - name: Publish WPF app as self-contained EXE
+      if: startsWith(github.ref, 'refs/tags/')
+      run: dotnet publish ${{ env.Wap_Project_Path }} -c ${{ matrix.configuration }} -r win-x64 --self-contained true /p:PublishSingleFile=true /p:PublishTrimmed=false
+
+    - name: Remove the pfx
+      if: startsWith(github.ref, 'refs/tags/')
+      run: |
+        $certificatePath = Join-Path -Path $env:Wap_Project_Directory -ChildPath GitHubActionsWorkflow.pfx
+        Remove-Item -Path $certificatePath
+
+    # --- Release creation, only runs on tags ---
+    - name: Zip Published App
+      if: startsWith(github.ref, 'refs/tags/') && matrix.configuration == 'Release'
+      run: Compress-Archive -Path ${{ env.Wap_Project_Directory }}/bin/Release/net9.0/win-x64/publish/* -DestinationPath ChemDb.Release.zip
+
+    - name: Create GitHub Release and Upload Asset
+      if: startsWith(github.ref, 'refs/tags/') && matrix.configuration == 'Release'
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ github.ref_name }}
+        name: Release ${{ github.ref_name }}
+        files: ChemDb.Release.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
