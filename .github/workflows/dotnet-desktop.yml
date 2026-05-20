@@ -60,7 +60,7 @@ jobs:
     # --- Release creation, only runs on tags ---
     - name: Zip Published App
       if: startsWith(github.ref, 'refs/tags/') && matrix.configuration == 'Release'
-      run: Compress-Archive -Path ${{ env.Wap_Project_Directory }}/bin/Release/net9.0/win-x64/publish/* -DestinationPath ChemDb.Release.zip
+      run: Compress-Archive -Path ${{ env.Wap_Project_Directory }}/bin/Release/net10.0/win-x64/publish/* -DestinationPath ChemDb.Release.zip
 
     - name: Create GitHub Release and Upload Asset
       if: startsWith(github.ref, 'refs/tags/') && matrix.configuration == 'Release'
