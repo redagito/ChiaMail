@@ -1,0 +1,73 @@
+<Window x:Class="ChiaMail.PreviewWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        Title="Email Preview"
+        Width="640" Height="520"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource BackgroundBrush}"
+        TextElement.Foreground="{StaticResource TextPrimaryBrush}"
+        FontFamily="Segoe UI">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Summary -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,16">
+            <Grid Margin="0,0,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="70" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="From:" FontWeight="SemiBold"
+                           Foreground="{StaticResource TextSecondaryBrush}" />
+                <TextBlock Grid.Column="1" x:Name="FromText" TextWrapping="NoWrap" />
+            </Grid>
+            <Grid Margin="0,0,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="70" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="To:" FontWeight="SemiBold"
+                           Foreground="{StaticResource TextSecondaryBrush}" />
+                <TextBlock Grid.Column="1" x:Name="ToText" TextWrapping="NoWrap" />
+            </Grid>
+            <Grid Margin="0,0,0,4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="70" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Subject:" FontWeight="SemiBold"
+                           Foreground="{StaticResource TextSecondaryBrush}" />
+                <TextBlock Grid.Column="1" x:Name="SubjectText" Grid.ColumnSpan="2"
+                           TextWrapping="NoWrap" FontWeight="SemiBold" />
+            </Grid>
+            <StackPanel Orientation="Horizontal" Margin="70,0,0,0">
+                <TextBlock x:Name="ModeText" FontSize="12"
+                           Foreground="{StaticResource PrimaryBrush}"
+                           Margin="0,0,16,0" />
+                <TextBlock x:Name="LogoIndicator" FontSize="12"
+                           Foreground="{StaticResource SuccessBrush}"
+                           Visibility="Collapsed" />
+                <TextBlock x:Name="AttachmentIndicator" FontSize="12"
+                           Foreground="{StaticResource TextSecondaryBrush}"
+                           Margin="16,0,0,0" Visibility="Collapsed" />
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Body preview -->
+        <Border Grid.Row="1" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
+                CornerRadius="6" Background="{StaticResource SurfaceBrush}">
+            <wv2:WebView2 x:Name="BodyPreviewWebView" />
+        </Border>
+
+        <!-- Close -->
+        <Button Grid.Row="2" Content="Close" Width="100" Margin="0,16,0,0"
+                Style="{StaticResource SecondaryButtonStyle}"
+                Click="Close_Click" />
+    </Grid>
+</Window>

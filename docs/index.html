@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChiaMail User Guide</title>
+<style>
+  :root {
+    --primary: #1A73E8;
+    --primary-dark: #1557B0;
+    --surface: #FFFFFF;
+    --bg: #F2F3F5;
+    --text: #202124;
+    --text-secondary: #5F6368;
+    --border: #DADCE0;
+    --success: #188038;
+    --error: #D93025;
+    --code-bg: #F8F9FA;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', -apple-system, Arial, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+  .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+  /* Header */
+  header {
+    background: var(--primary);
+    color: white;
+    padding: 40px 0 36px;
+  }
+  header h1 { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+  header p { font-size: 15px; color: #B3D4FC; }
+
+  /* Nav */
+  nav {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 10;
+  }
+  nav ul {
+    list-style: none; display: flex; gap: 8px;
+    overflow-x: auto; padding: 10px 0;
+  }
+  nav a {
+    display: block; padding: 6px 14px; border-radius: 6px;
+    text-decoration: none; color: var(--text-secondary); font-size: 13px;
+    white-space: nowrap; font-weight: 500;
+  }
+  nav a:hover { background: #E8F0FE; color: var(--primary); }
+
+  /* Main content */
+  main { padding: 40px 0 60px; }
+
+  section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+  }
+  section h2 {
+    font-size: 20px; font-weight: 600;
+    margin-bottom: 16px; padding-bottom: 8px;
+    border-bottom: 2px solid var(--primary);
+  }
+  section h3 {
+    font-size: 16px; font-weight: 600;
+    margin: 20px 0 8px;
+  }
+  section h4 {
+    font-size: 14px; font-weight: 600;
+    margin: 16px 0 4px; color: var(--text-secondary);
+  }
+  p { margin-bottom: 12px; }
+  ul, ol { margin-bottom: 12px; padding-left: 24px; }
+  li { margin-bottom: 4px; }
+
+  /* Code / inline */
+  code {
+    font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
+    font-size: 13px;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 6px;
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+
+  /* Images */
+  .screenshot {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    max-width: 100%;
+    height: auto;
+    margin: 16px 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .screenshot-placeholder {
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    background: #FAFBFC;
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 13px;
+    margin: 16px 0;
+  }
+
+  /* Steps */
+  .step { margin-bottom: 8px; }
+
+  /* Callout */
+  .callout {
+    border-left: 4px solid var(--primary);
+    background: #E8F0FE;
+    padding: 12px 16px;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+  .callout-warning {
+    border-left-color: var(--error);
+    background: #FCE8E6;
+  }
+  .callout-success {
+    border-left-color: var(--success);
+    background: #E6F4EA;
+  }
+
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    text-align: left;
+  }
+  th {
+    background: var(--code-bg);
+    font-weight: 600;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 24px 0;
+    color: var(--text-secondary);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 0 12px; }
+    section { padding: 20px 16px; }
+    header { padding: 28px 0 24px; }
+    header h1 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <h1>ChiaMail</h1>
+    <p>Gmail Mass Mailer — Send personalized bulk emails from a CSV</p>
+  </div>
+</header>
+
+<nav>
+  <div class="container">
+    <ul>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#setup">Setup</a></li>
+      <li><a href="#account">Gmail Account</a></li>
+      <li><a href="#recipients">Recipients</a></li>
+      <li><a href="#content">Email Content</a></li>
+      <li><a href="#logo">Company Logo</a></li>
+      <li><a href="#attachments">Attachments</a></li>
+      <li><a href="#preview">Preview</a></li>
+      <li><a href="#sending">Sending</a></li>
+      <li><a href="#troubleshooting">Troubleshooting</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="container">
+
+<!-- ─── Overview ─────────────────────────────────────────── -->
+<section id="overview">
+  <h2>Overview</h2>
+
+  <p>ChiaMail is a Windows program that lets you send personalized mass emails
+  through your Gmail account. You provide a list of recipients (first name,
+  last name, email), write one email template, and ChiaMail sends a customized
+  copy to each person — automatically filling in their name. You can add your
+  company logo, attach files, and control how fast emails are sent to avoid
+  getting blocked by Gmail.</p>
+
+  <h3>What You Can Do</h3>
+  <ul>
+    <li>📧 Send the same email to many people, with each person's name filled in automatically</li>
+    <li>📋 Load recipient lists from an Excel-like file (.csv)</li>
+    <li>🖼️ Add your company logo to every email</li>
+    <li>📎 Attach files like PDFs or images (up to 25 MB total)</li>
+    <li>⏱️ Set a pause between emails to stay within Gmail's limits</li>
+    <li>👁️ Preview an email before sending to check it looks right</li>
+    <li>📸 Take a screenshot with the 📷 button or <kbd>Ctrl+Shift+S</kbd></li>
+    <li>📝 A log file (<code>ChiaMail.log</code>) records everything that happens</li>
+  </ul>
+
+  <div class="screenshot-placeholder">
+    📷 Insert <strong>screenshot-main.png</strong> here — full application window overview
+  </div>
+</section>
+
+<!-- ─── Setup ─────────────────────────────────────────────── -->
+<section id="setup">
+  <h2>Prerequisites &amp; Setup</h2>
+
+  <h3>What You Need</h3>
+  <ol>
+    <li>A Gmail address (personal or work/school)</li>
+    <li><strong>2-Step Verification</strong> turned on for your Google account</li>
+    <li>An <strong>App Password</strong> — a special 16-character code Google gives you</li>
+  </ol>
+
+  <h3>Getting Your App Password</h3>
+  <ol>
+    <li>Go to <a href="https://myaccount.google.com/apppasswords" target="_blank">Google's App Passwords page</a></li>
+    <li>Sign in to your Google account if asked</li>
+    <li>Under "Select app", pick <strong>Mail</strong></li>
+    <li>Under "Select device", pick <strong>Other (Custom name)</strong> and type "ChiaMail"</li>
+    <li>Click <strong>Generate</strong></li>
+    <li>Copy the <strong>16-character code</strong> that appears (it looks like <code>xxxx xxxx xxxx xxxx</code>)</li>
+  </ol>
+
+  <div class="callout callout-warning">
+    <strong>Important:</strong> Your regular Gmail password will <strong>not</strong> work here.
+    You must use this special App Password. If you don't see the App Password option,
+    make sure 2-Step Verification is turned on first.
+  </div>
+
+  <h3>Setting Up Your Recipient List</h3>
+  <p>Create a file with your recipients. The easiest way is to use a spreadsheet
+  program like Excel or Google Sheets and save it as a ".csv" file. Include
+  these three columns (the names don't have to be exact — ChiaMail will find them):</p>
+  <table>
+    <thead>
+      <tr><th>Email</th><th>FirstName</th><th>LastName</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>alice@example.com</td><td>Alice</td><td>Johnson</td></tr>
+      <tr><td>bob@example.com</td><td>Bob</td><td>Smith</td></tr>
+    </tbody>
+  </table>
+  <p>Extra columns are fine — they'll be ignored. A sample file (<code>sample.csv</code>) is included with the app to use as a template.</p>
+  <p>Limits: max 50 MB file size, max 10,000 recipients.</p>
+</section>
+
+<!-- ─── Gmail Account ─────────────────────────────────────── -->
+<section id="account">
+  <h2>1. Gmail Account</h2>
+
+  <p>Fill in your Gmail address and the 16-character App Password you generated.</p>
+
+  <div class="screenshot-placeholder">
+    📷 Insert <strong>screenshot-account.png</strong> — Gmail Account section with email and password filled in
+  </div>
+
+  <h3>Test Connection</h3>
+  <p>Click <strong>Test Connection</strong> to make sure everything works:</p>
+  <ul>
+    <li><strong>Checked "Send test email":</strong> ChiaMail sends a real test email to your own
+        inbox. Check that you received it.</li>
+    <li><strong>Unchecked "Send test email":</strong> Only checks that ChiaMail can reach
+        Google's email servers. No email is sent.</li>
+  </ul>
+
+  <div class="callout callout-success">
+    <strong>Tip:</strong> Start without the checkmark to quickly test your internet connection,
+    then check it to fully confirm your App Password works.
+  </div>
+
+  <p>Need an App Password? Click the <strong>Google App Passwords</strong> link in the app to go
+  directly to the page where you can create one.</p>
+</section>
+
+<!-- ─── Recipients ────────────────────────────────────────── -->
+<section id="recipients">
+  <h2>2. Recipients (CSV)</h2>
+
+  <p>Click <strong>Browse…</strong> to pick your recipient file. The data shows up
+  in a table and the app tells you how many people it found.</p>
+
+  <div class="screenshot-placeholder">
+    📷 Insert <strong>screenshot-csv.png</strong> — CSV loaded with preview grid showing rows
+  </div>
+
+  <h3>What Happens When You Load a File</h3>
+  <ul>
+    <li>The app finds the <strong>Email</strong>, <strong>FirstName</strong>, and <strong>LastName</strong>
+        columns automatically (even if the names aren't exact)</li>
+    <li>Duplicate email addresses are skipped and reported</li>
+    <li>Invalid email addresses are skipped and reported</li>
+    <li>Blank rows are ignored</li>
+    <li>You'll see a summary of any issues found</li>
+  </ul>
+
+  <div class="callout callout-warning">
+    If no valid recipients are found, the app will show an error and won't proceed.
+    Make sure your file has an <strong>Email</strong> column with proper addresses like <code>name@example.com</code>.
+  </div>
+</section>
+
+<!-- ─── Email Content ─────────────────────────────────────── -->
+<section id="content">
+  <h2>3. Email Content</h2>
+
+  <div class="screenshot-placeholder">
+    📷 Insert <strong>screenshot-content.png</strong> — Email Content section with subject, body, placeholder buttons
+  </div>
+
+  <h3>Subject</h3>
+  <p>Type your email subject line. You can use <code>{FirstName}</code> and
+  <code>{LastName}</code> to personalize it — these will be replaced with each
+  person's actual name when sent. If you add <code>{Logo}</code> to the subject,
+  it will be removed automatically (logos only appear in the body).</p>
+
+  <h3>Body</h3>
+  <p>Choose how you want to write your email:</p>
+  <table>
+    <thead>
+      <tr><th>Mode</th><th>What It Does</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Plain Text</td>
+        <td>Just type normally, like a regular email. Line breaks and spacing
+            are preserved. Best if you don't know HTML.</td>
+      </tr>
+      <tr>
+        <td>HTML</td>
+        <td>You can use HTML codes for rich formatting — bold text, tables,
+            colored sections, links, etc. Use this if you know HTML.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Personalization (Placeholders)</h3>
+  <p>Click the buttons below the subject field to insert special tags that get
+  replaced with each recipient's information:</p>
+  <table>
+    <thead>
+      <tr><th>Tag</th><th>Replaced With</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>{FirstName}</code></td><td>The person's first name (from your list)</td></tr>
+      <tr><td><code>{LastName}</code></td><td>The person's last name (from your list)</td></tr>
+      <tr><td><code>{Logo}</code></td><td>Your company logo image (body only, not subject)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>Pro tip:</strong> Place <code>{Logo}</code> in the body wherever you want the logo to
+    appear. If you don't, it will be added automatically at the bottom of the email.
+  </div>
+</section>
+
+<!-- ─── Company Logo ──────────────────────────────────────── -->
+<section id="logo">
+  <h2>4. Company Logo (Optional)</h2>
+
+  <p>Pick an image file to include your company logo in every email. Supported
+  formats include PNG, JPG, GIF, BMP, WebP, and more.</p>
+
+  <div class="screenshot-placeholder">
+    📷 Insert <strong>screenshot-logo.png</strong> — Logo section with an image selected and preview visible
+  </div>
+
+  <ol>
+    <li>Click <strong>Browse…</strong> and select your logo image</li>
+    <li>A small preview of the logo appears</li>
+    <li>Uncheck <strong>Include logo in emails</strong> to temporarily disable it without removing the file</li>
+    <li>Place <code>{Logo}</code> in your email body where you want the image, or let it appear at the bottom automatically</li>
+  </ol>
+
+  <div class="callout callout-warning">
+    <strong>Note:</strong> The logo is embedded directly into each email, not linked from a
+    website. Most email programs (Gmail, Outlook, Apple Mail) show it automatically.
+    If recipients see a broken image, their email app may not support embedded images.
+  </div>
+</section>
+
+<!-- ─── Attachments ───────────────────────────────────────── -->
+<section id="attachments">
+  <h2>5. Attachments</h2>
+
+  <p>Attach files to every outgoing email. Click <strong>Add Files…</strong>
+  and select one or more files. Each file appears in a list with a remove button.</p>
+
+  <div class="screenshot-placeholder">
+    📷 Insert <strong>screenshot-attachments.png</strong> — Attachments section with files listed
+  </div>
+
+  <h3>Limits</h3>
+  <ul>
+    <li>Total attachment size cannot exceed <strong>25 MB</strong> (Gmail's limit)</li>
+    <li>The check runs <em>before</em> any emails are sent</li>
+    <li>Duplicate files (same path) are silently ignored</li>
+  </ul>
+</section>
+
+<!-- ─── Preview ───────────────────────────────────────────── -->
+<section id="preview">
+  <h2>6. Preview Email</h2>
+
+  <p>Click <strong>Preview Email</strong> to see exactly how your email will look
+  with placeholders replaced using the <strong>first recipient</strong> from your CSV.</p>
+
+  <div class="screenshot-placeholder">
+    📷 Insert <strong>screenshot-preview.png</strong> — Preview window showing resolved subject and body
+  </div>
+
+  <p>The preview window shows:</p>
+  <ul>
+    <li><strong>From:</strong> your Gmail address</li>
+    <li><strong>To:</strong> first recipient's email</li>
+    <li><strong>Subject:</strong> subject with <code>{FirstName}</code>/<code>{LastName}</code> resolved</li>
+    <li><strong>Body:</strong> body text with all placeholders resolved</li>
+    <li>Mode indicator (Plain Text / HTML)</li>
+    <li>Logo and attachment indicators if included</li>
+  </ul>
+
+  <div class="callout callout-success">
+    <strong>Tip:</strong> Use preview to verify your placeholder syntax <em>before</em>
+    sending to hundreds of recipients. One typo in <code>{FirstName}</code> would be caught here.
+  </div>
+</section>
+
+<!-- ─── Sending ───────────────────────────────────────────── -->
+<section id="sending">
+  <h2>7. Sending Emails</h2>
+
+  <div class="screenshot-placeholder">
+    📷 Insert <strong>screenshot-sending.png</strong> — Bottom bar with progress bar and status log during send
+  </div>
+
+  <h3>Bottom Bar Controls</h3>
+
+  <h4>Delay</h4>
+  <p>Set the number of seconds to wait between each email. Gmail's sending limits are
+  approximately 500 emails/day for free accounts and 2,000/day for Google Workspace.
+  A delay of 5–10 seconds is recommended for bulk sends. Only digits are accepted.</p>
+
+  <h4>Send Test to Self</h4>
+  <p>Sends a test email to <strong>your own address</strong> (the one you entered in the
+  Gmail Account section). It uses whatever subject, body, logo, and attachments you've
+  set up. This ignores the recipient list — it's just to verify everything works.</p>
+
+  <h4>Send All Emails</h4>
+  <p>Starts sending to all your recipients. Before sending, the app:</p>
+  <ol>
+    <li>Checks that everything is filled in correctly</li>
+    <li>Shows a confirmation screen with a summary</li>
+    <li>Tests that it can reach Google's email servers</li>
+    <li>Sends to each person one at a time, with a pause between each</li>
+  </ol>
+
+  <h3>During Send</h3>
+  <ul>
+    <li>A progress bar shows completion percentage</li>
+    <li>The status log updates after each recipient</li>
+    <li>Errors per recipient are logged but don't stop the batch</li>
+    <li>Click <strong>Cancel</strong> to stop mid-batch (pending sends are cancelled)</li>
+    <li>Closing the window during send prompts for confirmation</li>
+  </ul>
+
+  <h3>After Send</h3>
+  <ul>
+    <li>The status log shows results for every recipient (✓ success / ✗ error)</li>
+    <li>All log entries are saved to <code>ChiaMail.log</code> next to the application EXE</li>
+    <li>The log is cleared each time the app starts</li>
+  </ul>
+</section>
+
+<!-- ─── Troubleshooting ───────────────────────────────────── -->
+<section id="troubleshooting">
+  <h2>Troubleshooting</h2>
+
+  <h3>"SMTP error — Authentication failed"</h3>
+  <ul>
+    <li>Make sure 2-Step Verification is <strong>turned on</strong> for your Google account</li>
+    <li>You must use an <strong>App Password</strong> — your regular Gmail password won't work</li>
+    <li>App Passwords are 16 characters long (spaces don't matter)</li>
+    <li>If you created a new App Password, update it in the app</li>
+  </ul>
+
+  <h3>"Could not reach email server"</h3>
+  <ul>
+    <li>Check your internet connection</li>
+    <li>Your firewall or VPN might be blocking the connection</li>
+    <li>Some workplace or school networks block outgoing email. Try from a different network.</li>
+  </ul>
+
+  <h3>"CSV has no valid recipients"</h3>
+  <ul>
+    <li>Make sure your file has a column called <strong>Email</strong> (capitalization doesn't matter)</li>
+    <li>Check that email addresses are written correctly, like <code>name@example.com</code></li>
+    <li>Remove any duplicate email addresses</li>
+    <li>Make sure the file isn't empty and has at least one row of data</li>
+  </ul>
+
+  <h3>"Attachment size exceeds limit"</h3>
+  <ul>
+    <li>Total attachments per message cannot exceed <strong>25 MB</strong></li>
+    <li>Reduce file sizes or remove large attachments</li>
+    <li>Consider hosting large files and linking them instead</li>
+  </ul>
+
+  <h3>"Logo file not supported"</h3>
+  <ul>
+    <li>Supported formats: PNG, JPG, GIF, BMP, WebP, SVG, ICO, TIFF</li>
+    <li>Rename your file to have the correct extension</li>
+    <li>If the file is corrupted, try re-saving it from your image editor</li>
+  </ul>
+
+  <h3>Taking Screenshots</h3>
+  <p>Click the 📷 button in the bottom bar or press <kbd>Ctrl+Shift+S</kbd> on your
+  keyboard to save a picture of the current window. You'll be asked where to save it.
+  This is useful for documentation or sharing what you see with someone else.</p>
+
+  <div class="callout callout-warning">
+    <strong>Windows Defender / SmartScreen:</strong> Since this app isn't digitally signed,
+    Windows may show a warning the first time you run it. Click "More info" then "Run anyway"
+    to proceed. This is normal for programs that don't have a paid publisher certificate.
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    ChiaMail User Guide &mdash; Generated for version 1.0.0
+  </div>
+</footer>
+
+</body>
+</html>

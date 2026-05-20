@@ -1,0 +1,29 @@
+# Build outputs
+bin/
+obj/
+publish/
+[Bb]uild/
+
+# IDE
+.vs/
+*.user
+*.suo
+*.sln.docstates
+*.DotSettings.user
+_ReSharper*/
+
+# NuGet
+packages/
+*.nupkg
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Temp / logs
+*.log
+*.tmp
+
+# Test
+src/ChiaMail/rec.csv
+src/ChiaMail/rec2.csv

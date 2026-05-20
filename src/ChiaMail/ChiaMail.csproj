@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>ChiaMail</AssemblyName>
+    <Description>Gmail Mass Mailer - Send personalized emails from CSV data</Description>
+    <Version>1.0.0</Version>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors>MSB9999</WarningsAsErrors>
+    <ApplicationIcon>logo.ico</ApplicationIcon>
+    <Win32Icon>logo.ico</Win32Icon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="sample.csv" />
+    <Content Include="sample.csv" CopyToOutputDirectory="PreserveNewest" Condition="Exists('sample.csv')" />
+    <Content Include="..\..\docs\**" CopyToOutputDirectory="PreserveNewest" Link="docs\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Resource Include="logo.ico" />
+    <Resource Include="logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>ChiaMail.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2651.64" />
+  </ItemGroup>
+
+</Project>
